@@ -1,11 +1,7 @@
 spec:
-  name: V2ray-DO
-  services:
-  - name: web
-    git:
-      branch: main
-      repo_clone_url: https://github.com/Horapusaa/V2ray-DO.git
-    envs:
-    - key: UUID
-      value: "f46bfc81-8dbf-47e2-b499-9cf8ab423aec"
-
+ name: V2ray-DO
+ services:
+ - name: web
+   git:
+     branch: main
+     repo_clone_url: https://github.com/Horapusaa/V2ray-DO.git
