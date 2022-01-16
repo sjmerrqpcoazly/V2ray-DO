@@ -1,7 +1,7 @@
 spec:
- name: sample-golang
+ name: V2ray-DO
  services:
  - name: web
    git:
      branch: main
-     repo_clone_url: https://github.com/digitalocean/sample-golang.git
+     repo_clone_url: https://github.com/Horapusaa/V2ray-DO.git
