@@ -1,0 +1,6 @@
+name: V2ray-DO
+services:
+- name: web
+  github:
+    repo: https://github.com/Horapusaa/V2ray-DO
+    branch: main
