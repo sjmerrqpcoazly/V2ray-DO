@@ -1,9 +1,4 @@
 #!/bin/bash
-
-rm -rf /etc/localtime
-cp /usr/share/zoneinfo/Asia/Colombo /etc/localtime
-date -R
-
 ufw disable
 
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
@@ -11,126 +6,18 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
 rm -rf /usr/local/etc/xray/config.json
 cat << EOF > /usr/local/etc/xray/config.json
 {
-  "log": {
-    "loglevel": "warning"
-  },
-  "inbounds": [
-    {
-      "port": 443,
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "$UUID",
-            "flow": "xtls-rprx-direct",
-            "level": 0
-          }
-        ],
-        "decryption": "none",
-        "fallbacks": [
-          {
-            "dest": "www.google.lk:443"
-          },
-          {
-            "alpn": "h2",
-            "dest": 2001,
-            "xver": 0
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "xtls",
-        "xtlsSettings": {
-          "alpn": [
-            "h2",
-            "http/1.1"
-          ],
-          "certificates": [
-            {
-              "certificateFile": "/etc/xray/xray.crt",
-              "keyFile": "/etc/xray/xray.key"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "port": 2001,
-      "listen": "127.0.0.1",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "$UUID"
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "grpc",
-        "grpcSettings": {
-          "serviceName": "grpc"
-        }
-      }
-    },
-    {
-      "port": 80,
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "$UUID"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "http",
-            "response": {
-              "version": "1.1",
-              "status": "200",
-              "reason": "OK",
-              "headers": {
-                "Content-Type": [
-                  "application/octet-stream",
-                  "video/mpeg",
-                  "application/x-msdownload",
-                  "text/html",
-                  "application/x-shockwave-flash"
-                ],
-                "Transfer-Encoding": [
-                  "chunked"
-                ],
-                "Connection": [
-                  "keep-alive"
-                ],
-                "Pragma": "no-cache"
-              }
-            }
-          }
-        },
-        "security": "none"
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom"
-    }
-  ]
+"log":{"loglevel":"none"},
+"inbounds":[
+{"listen":"0.0.0.0","port":20,"protocol":"vless",
+"settings":{
+"clients":[
+{"id":"97368ffa-2a16-45e5-aee3-73405aec9aac","level":0,"email":"love@v2fly.org"}
+],"decryption":"none"},
+"streamSettings":{"network":"tcp"}
+}],
+"outbounds":[{"protocol":"freedom","settings":{},"tag":"tag1"}]
 }
 EOF
-
-openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
-    -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" \
-    -keyout xray.key  -out xray.crt
-mkdir /etc/xray
-cp xray.key /etc/xray/xray.key
-cp xray.crt /etc/xray/xray.crt
-chmod 644 /etc/xray/xray.key
 
 systemctl enable xray
 systemctl restart xray
