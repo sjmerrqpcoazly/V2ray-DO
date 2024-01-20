@@ -5,4 +5,7 @@ RUN set -ex\
     && apt upgrade -y \
     && apt install -y wget
 
-RUN /bin/bash -c 'source ./v2ray.sh' 
+RUN bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
+
+RUN rm -rf /usr/local/etc/xray/config.json
+
